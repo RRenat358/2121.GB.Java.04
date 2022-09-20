@@ -1,6 +1,8 @@
 import javax.imageio.IIOException;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class Server implements Runnable {
 
@@ -23,10 +25,25 @@ public class Server implements Runnable {
     }
 
 
+    private void process(Socket socket) throws IOException {
+        DataInput inputStream = new DataInputStream(socket.getInputStream());
+        DataOutput outputStream = new DataOutputStream(socket.getOutputStream());
+
+        int size =inputStream.readInt();
+        byte[] data = new byte[size];
+        inputStream.readFully(data);
+
+        System.out.println("Received: " + new String(data));
+
+        String response = "Hello, Client";
+        byte[] outByte = response.getBytes(StandardCharsets.UTF_8);
+        outputStream.writeInt(outByte.length);
+        outputStream.write(outByte);
+
+        System.out.println("Responding done");
 
 
-
-
+    }
 
 
     /**
@@ -42,6 +59,31 @@ public class Server implements Runnable {
      */
     @Override
     public void run() {
+        Socket socket;
+
+        openServerSocket();
+        System.out.println("Server started");
+
+        while (!isStopped) {
+            try {
+                socket = serverSocket.accept();
+            } catch (IOException e) {
+                if (isStopped) {
+                    System.out.println("Server stopped");
+                    return;
+                }
+                throw new RuntimeException(e);
+            }
+
+            try {
+                process(socket);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
+
 
     }
 
