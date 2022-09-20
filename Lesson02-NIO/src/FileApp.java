@@ -48,7 +48,7 @@ public class FileApp {
         fileChannel.read(byteBuffer);
 
         byte[] bytes = Files.readAllBytes(Path.of("file.txt"));
-
+//        java -XX:+PrintFlagsFinal -version | grep (findStr) HeapSize
 
 
     }
