@@ -56,7 +56,7 @@ public class Server02 implements Runnable {
                         }
                         ((ChannelReader) key.attachment()).read();
                     }
-                    // todo: можно попробовать writer написать
+                    // todo: можно writer написать
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
