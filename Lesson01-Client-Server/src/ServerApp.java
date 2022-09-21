@@ -4,7 +4,7 @@ public class ServerApp {
 
     public static void main(String[] args) {
 
-        Server server = new Server(8358);
+        Server01 server = new Server01(8358);
         new Thread(server).start();
 
         Scanner scanner = new Scanner(System.in);

@@ -1,10 +1,9 @@
-import javax.imageio.IIOException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-public class Server implements Runnable {
+public class Server01 implements Runnable {
 
 
     private final int port;
@@ -12,7 +11,7 @@ public class Server implements Runnable {
     private boolean isStopped;
 
 
-    public Server(int port) {
+    public Server01(int port) {
         this.port = port;
     }
 
