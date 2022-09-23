@@ -1,11 +1,14 @@
-package Client;
+package Client.src.main.java.ru.rrenat358;
 
 
 import Common.Command;
+import io.netty.channel.EventLoopGroup;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class Client {
 
@@ -32,10 +35,23 @@ public class Client {
 
         Command command = new Command("put", file, Files.readAllBytes(file.toPath()));
 
+        new Client().sendCommand();
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            if (scanner.nextLine().equals("s")) {
+                System.out.println("sss");
+            }
+        }
 
 
     }
 
+    private void sendCommand(Command command, Consumer<String> callback) {
+        EventLoopGroup workerGroup =
+
+
+
+    }
 
 
 }
