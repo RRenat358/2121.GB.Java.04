@@ -2,8 +2,10 @@ package ru.rrenat358;
 
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.Arrays;
 
-public class Command {
+public class Command implements Serializable {
 
     private String command;
     private File file;
@@ -42,13 +44,12 @@ public class Command {
         this.data = data;
     }
 
-
-
-
-
-
-
-
-
-
+    @Override
+    public String toString() {
+        return "Command{" +
+                "command='" + command + '\'' +
+                ", file=" + file +
+                ", data=" + Arrays.toString(data) +
+                '}';
+    }
 }

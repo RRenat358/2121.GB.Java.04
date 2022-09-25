@@ -46,13 +46,16 @@ public class Client {
 
         Command command = new Command("put", file, Files.readAllBytes(file.toPath()));
 
-        new Client().sendCommand(command, (respons) -> {
+        new Client("localhost", 13581).sendCommand(command, (respons) -> {
             System.out.println("respons" + respons);
         });
 
         while (true) {
             Scanner scanner = new Scanner(System.in);
             if (scanner.nextLine().equals("s")) {
+                new Client("localhost", 13581).sendCommand(command, (response) -> {
+                    System.out.println("response = " + response);
+                });
                 System.out.println("sss");
             }
         }
