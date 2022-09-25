@@ -4,7 +4,7 @@ package ru.rrenat358;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.sctp.nio.NioSctpServerChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.string.StringEncoder;
@@ -21,15 +21,19 @@ public class Server {
     private static final int MAX_OBJECT_SIZE = 1024 * 1024 * 100;
 
 
-    private final String host;
+    private String host;
     private final int port;
 
     public static void main(String[] args) throws InterruptedException {
-        new Server().startServer();
+        new Server(9000).startServer();
     }
 
     public Server() {
         this(HOST, PORT);
+    }
+
+    public Server(int port) {
+        this.port = port;
     }
 
     public Server(String host, int port) {
@@ -38,13 +42,13 @@ public class Server {
     }
 
     private void startServer() throws InterruptedException {
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
         try {
             ServerBootstrap server = new ServerBootstrap();
             server.group(bossGroup, workGroup);
-            server.channel(NioSctpServerChannel.class);
+            server.channel(NioServerSocketChannel.class);
             server.option(ChannelOption.SO_BACKLOG, 128);
             server.childOption(ChannelOption.SO_KEEPALIVE, true);
             server.childHandler(new ChannelInitializer<>() {
@@ -59,7 +63,7 @@ public class Server {
 
                 }
             });
-            ChannelFuture channelFuture = server.bind().sync();
+            ChannelFuture channelFuture = server.bind(port).sync();
             channelFuture.channel().closeFuture().sync();
 
         } finally {
