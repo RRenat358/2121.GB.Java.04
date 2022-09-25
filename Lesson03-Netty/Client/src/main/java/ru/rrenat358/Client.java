@@ -7,6 +7,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.sctp.nio.NioSctpServerChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.codec.string.StringDecoder;
@@ -16,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -44,6 +47,8 @@ public class Client {
 
         File file = new File(clientDataUserPath + fileName01);
 
+        Path pathToFile = Paths.get(fileName01);
+        System.out.println(pathToFile.toAbsolutePath());
         Command command = new Command("put", file, Files.readAllBytes(file.toPath()));
 
         new Client("localhost", 13581).sendCommand(command, (respons) -> {
@@ -70,7 +75,7 @@ public class Client {
         try {
             Bootstrap client = new Bootstrap();
             client.group(workerGroup);
-            client.channel(NioSctpServerChannel.class);
+            client.channel(NioSocketChannel.class);
             client.option(ChannelOption.SO_KEEPALIVE, true);
             client.handler(new ChannelInitializer<>() {
                 @Override
@@ -84,7 +89,7 @@ public class Client {
 
                 }
             });
-            ChannelFuture future = client.connect().sync();
+            ChannelFuture future = client.connect(host, port).sync();
             future.channel().closeFuture().sync();
 
         } finally {
