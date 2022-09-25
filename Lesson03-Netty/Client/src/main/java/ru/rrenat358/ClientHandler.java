@@ -31,6 +31,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("ClientHandler. channelUnregistered = " + ctx.channel().remoteAddress());
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         System.out.println("ClientHandler exception");
         cause.printStackTrace();
