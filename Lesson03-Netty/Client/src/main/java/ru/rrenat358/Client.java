@@ -1,4 +1,4 @@
-package Client.src.main.java.ru.rrenat358;
+package ru.rrenat358;
 
 
 import Common.Command;
