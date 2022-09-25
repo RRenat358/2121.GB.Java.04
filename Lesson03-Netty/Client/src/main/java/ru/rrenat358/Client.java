@@ -3,11 +3,17 @@ package ru.rrenat358;
 
 //import Common.Command;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.sctp.nio.NioSctpServerChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -48,12 +54,33 @@ public class Client {
 
     }
 
-    private void sendCommand(Command command, Consumer<String> callback) {
+    private void sendCommand(Command command, Consumer<String> callback) throws InterruptedException {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
 
         try{
-            Bootstrap cl
+            Bootstrap client = new Bootstrap();
+            client.group(workerGroup);
+            client.channel(NioSctpServerChannel.class);
+            client.option(ChannelOption.SO_KEEPALIVE, true);
+            client.handler(new ChannelInitializer<>() {
+                @Override
+                protected void initChannel(Channel channel) throws Exception {
+                    channel.pipeline().addLast(
+                            new ObjectEncoder(),
+                            new LineBasedFrameDecoder(80),
+                            new StringDecoder(StandardCharsets.UTF_8),
+                            new ClientHandler(command, callback)
+
+                    );
+
+                }
+            });
+            ChannelFuture future = client.connect().sync();
+            future.channel().closeFuture().sync();
+
+        } finally {
+            workerGroup.shutdownGracefully();
         }
 
 
