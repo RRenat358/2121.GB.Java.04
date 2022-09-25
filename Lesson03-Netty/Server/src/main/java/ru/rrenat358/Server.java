@@ -2,10 +2,7 @@ package ru.rrenat358;
 
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.sctp.nio.NioSctpServerChannel;
 import io.netty.handler.codec.serialization.ClassResolver;
@@ -14,6 +11,8 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
 import java.nio.charset.StandardCharsets;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Server {
 
@@ -27,7 +26,7 @@ public class Server {
     private String host;
     private int port;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         new Server(HOST, PORT).startServer();
     }
 
@@ -39,7 +38,7 @@ public class Server {
         this.port = port;
     }
 
-    private void startServer() {
+    private void startServer() throws InterruptedException {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
@@ -52,8 +51,9 @@ public class Server {
             server.childHandler(new ChannelInitializer<>() {
                 @Override
                 protected void initChannel(Channel channel) throws Exception {
+//                    Object StandardCharsets = null;
                     channel.pipeline().addLast(
-                            new StringEncoder(StandardCharsets, UTF_8),
+                            new StringEncoder(StandardCharsets.UTF_8),
                             new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null)),
                             new ServerHandler()
 
@@ -62,6 +62,8 @@ public class Server {
 
                 }
             });
+            ChannelFuture channelFuture = server.bind().sync();
+            channelFuture.channel().closeFuture().sync();
 
         } finally {
             workGroup.shutdownGracefully();
