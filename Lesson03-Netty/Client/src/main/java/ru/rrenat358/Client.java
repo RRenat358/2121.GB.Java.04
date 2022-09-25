@@ -2,6 +2,7 @@ package ru.rrenat358;
 
 
 //import Common.Command;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -44,6 +45,7 @@ public class Client {
         Command command = new Command("put", file, Files.readAllBytes(file.toPath()));
 
         new Client().sendCommand(command, );
+
         while (true) {
             Scanner scanner = new Scanner(System.in);
             if (scanner.nextLine().equals("s")) {
@@ -51,14 +53,14 @@ public class Client {
             }
         }
 
-
     }
+
 
     private void sendCommand(Command command, Consumer<String> callback) throws InterruptedException {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
 
-        try{
+        try {
             Bootstrap client = new Bootstrap();
             client.group(workerGroup);
             client.channel(NioSctpServerChannel.class);
@@ -71,7 +73,6 @@ public class Client {
                             new LineBasedFrameDecoder(80),
                             new StringDecoder(StandardCharsets.UTF_8),
                             new ClientHandler(command, callback)
-
                     );
 
                 }
