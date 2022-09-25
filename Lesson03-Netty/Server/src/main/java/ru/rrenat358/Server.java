@@ -53,12 +53,10 @@ public class Server {
                 protected void initChannel(Channel channel) throws Exception {
 //                    Object StandardCharsets = null;
                     channel.pipeline().addLast(
-                            new StringEncoder(StandardCharsets.UTF_8),
-                            new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null)),
-                            new ServerHandler()
-
-
-                    );
+                                    new StringEncoder(StandardCharsets.UTF_8),
+                                    new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null)),
+                                    new ServerHandler()
+                            );
 
                 }
             });
