@@ -23,7 +23,9 @@ public class Client {
 
     private static final String HOST = "localhost";
     private static final int PORT = 13581;
+
     private static final String clientDataUserPath = "Client/DataUser/";
+    private static final String fileName01 = "userFile01.txt";
 
 
     private final String host;
@@ -38,13 +40,15 @@ public class Client {
         this.port = port;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-        File file = new File(clientDataUserPath + "my-file.txt");
+        File file = new File(clientDataUserPath + fileName01);
 
         Command command = new Command("put", file, Files.readAllBytes(file.toPath()));
 
-        new Client().sendCommand(command, );
+        new Client().sendCommand(command, (respons) -> {
+            System.out.println("respons" + respons);
+        });
 
         while (true) {
             Scanner scanner = new Scanner(System.in);
