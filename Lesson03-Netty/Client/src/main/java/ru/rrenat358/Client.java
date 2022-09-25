@@ -2,7 +2,9 @@ package ru.rrenat358;
 
 
 //import Common.Command;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class Client {
 
         Command command = new Command("put", file, Files.readAllBytes(file.toPath()));
 
-        new Client().sendCommand();
+        new Client().sendCommand(command, );
         while (true) {
             Scanner scanner = new Scanner(System.in);
             if (scanner.nextLine().equals("s")) {
@@ -47,8 +49,12 @@ public class Client {
     }
 
     private void sendCommand(Command command, Consumer<String> callback) {
-        EventLoopGroup workerGroup =
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
 
+
+        try{
+            Bootstrap cl
+        }
 
 
     }

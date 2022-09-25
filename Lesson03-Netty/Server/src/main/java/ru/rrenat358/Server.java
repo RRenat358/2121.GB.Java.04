@@ -5,14 +5,12 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.sctp.nio.NioSctpServerChannel;
-import io.netty.handler.codec.serialization.ClassResolver;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
 import java.nio.charset.StandardCharsets;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Server {
 
@@ -23,14 +21,15 @@ public class Server {
     private static final int MAX_OBJECT_SIZE = 1024 * 1024 * 100;
 
 
-    private String host;
-    private int port;
+    private final String host;
+    private final int port;
 
     public static void main(String[] args) throws InterruptedException {
         new Server(HOST, PORT).startServer();
     }
 
     public Server() {
+        this(HOST, PORT);
     }
 
     public Server(String host, int port) {
@@ -53,10 +52,10 @@ public class Server {
                 protected void initChannel(Channel channel) throws Exception {
 //                    Object StandardCharsets = null;
                     channel.pipeline().addLast(
-                                    new StringEncoder(StandardCharsets.UTF_8),
-                                    new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null)),
-                                    new ServerHandler()
-                            );
+                            new StringEncoder(StandardCharsets.UTF_8),
+                            new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null)),
+                            new ServerHandler()
+                    );
 
                 }
             });
