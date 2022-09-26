@@ -60,18 +60,16 @@ public class Server {
                             new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null)),
                             new ServerHandler()
                     );
-
                 }
             });
             ChannelFuture channelFuture = server.bind(port).sync();
             channelFuture.channel().closeFuture().sync();
-
         } finally {
             workGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
 
-
     }
+
 
 }

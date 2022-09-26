@@ -52,4 +52,6 @@ public class Command implements Serializable {
                 ", data=" + Arrays.toString(data) +
                 '}';
     }
+
+
 }
