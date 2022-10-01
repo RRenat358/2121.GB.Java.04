@@ -20,23 +20,26 @@ public class ServerHandler extends SimpleChannelInboundHandler<Command> {
         System.out.println("command = " + command);
         if (command.getCommand().equals("put")) {
 
-            Path root = Path.of("Server/DataUser");
+            Path root = Path.of("Lesson03-Netty/Server/DataUser");
             Files.createDirectories(root);
-            Path file = root.resolve(command.getFile().getPath());
+            Path filePath = root.resolve(command.getFile().getPath());
+            System.out.println("Файл получен и будет сохранён: \n" + filePath);
 
-            Files.createDirectories(file.getParent());
+            Files.createDirectories(filePath.getParent());
             try {
-                Files.createFile(file);
+                Files.createFile(filePath);
             } catch (FileAlreadyExistsException ignored) {
                 // do nothing
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            Files.write(file, command.getData());
+            Files.write(filePath, command.getData());
         }
         ChannelFuture channelFuture = channelHandlerContext.writeAndFlush(
-                String.format("File %s stored!\n", command.getFile().getName())
+                String.format("Server: Файл получен: \n%s", command.getFile().getName())
+
         );
+        System.out.println("Файл сохранён: \n" + command.getFile().getName());
         channelFuture.addListener(ChannelFutureListener.CLOSE);
     }
 
